@@ -8,7 +8,7 @@ r = RandomWords()
 def generate_words():
     words = ""
     for i in range(3):
-        buffer = r.get_random_word()
+        buffer = r.get_random_word() + " "
         words += buffer.capitalize()
     return words
 
@@ -25,3 +25,24 @@ def generate_key():
                 print("No key found, Generating a new key")
                 return key
             
+def encrypt_words(message, key):
+    f = Fernet(key)
+    encrypted = f.encrypt(message.encode())
+    return encrypted
+
+def decrypt_words(encrypted, key):
+    f = Fernet(key)
+    decrypted = f.decrypt(encrypted)
+    return decrypted
+
+
+key = generate_key()
+message = generate_words()
+
+if input("Generate new words? (y/n): ") == "y":
+    message = generate_words()
+    print(f"Generated words: {message}")
+    encrypted = encrypt_words(message, key)
+    print(f"Encrypted words: {str(encrypted).split("'")[1]}")
+else:
+     print(str(decrypt_words(input("words to decrypt: "), key)).split("'")[1])
