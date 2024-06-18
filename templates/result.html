@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Result</title>
+</head>
+<body>
+    {% if message %}
+    <h2>Generated Message:</h2>
+    <p>{{ message }}</p>
+    {% endif %}
+
+    {% if encrypted %}
+    <h2>Encrypted Message:</h2>
+    <p>{{ encrypted }}</p>
+    {% endif %}
+
+    {% if clipboard_message %}
+    <p><strong>{{ clipboard_message }}</strong></p>
+    {% endif %}
+
+    {% if decrypted %}
+    <h2>Decrypted Message:</h2>
+    <p>{{ decrypted }}</p>
+    {% endif %}
+
+    <a href="/">Back</a>
+</body>
+</html>

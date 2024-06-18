@@ -3,6 +3,7 @@ from cryptography.fernet import Fernet
 from random_word import RandomWords
 import os
 import pyperclip
+from flask import Flask, render_template, request
 
 r = RandomWords()
 
@@ -37,16 +38,47 @@ def decrypt_words(encrypted, key):
     return decrypted
 
 
-key = generate_key()
-message = generate_words()
+# key = generate_key()
+# message = generate_words()
 
-if input("new or decrypt (n/d): ") == "n":
+# if input("new or decrypt (n/d): ") == "n":
+#     message = generate_words()
+#     print(f"Generated words: {message}")
+#     encrypted = encrypt_words(message, key)
+#     encrypted = str(encrypted).split("'")[1]
+#     print(f"Encrypted words: {encrypted}")
+#     pyperclip.copy(encrypted)
+#     print("Copied to clipboard!")
+# else:
+#      print(str(decrypt_words(input("words to decrypt: "), key)).split("'")[1])
+
+app = Flask(__name__)
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/encrypt', methods=['POST'])
+def encrypt():
     message = generate_words()
-    print(f"Generated words: {message}")
+    key = generate_key()
     encrypted = encrypt_words(message, key)
-    encrypted = str(encrypted).split("'")[1]
-    print(f"Encrypted words: {encrypted}")
-    pyperclip.copy(encrypted)
-    print("Copied to clipboard!")
-else:
-     print(str(decrypt_words(input("words to decrypt: "), key)).split("'")[1])
+    encrypted_str = encrypted.decode()  # Convert bytes to string
+    pyperclip.copy(encrypted_str)
+    clipboard_message = "Encrypted message copied to clipboard!"
+    return render_template('result.html', message=message, encrypted=encrypted_str, clipboard_message=clipboard_message)
+
+@app.route('/decrypt', methods=['POST'])
+def decrypt():
+    encrypted_str = request.form['encrypted']
+    try:
+        encrypted_bytes = encrypted_str
+        key = generate_key()
+        decrypted = decrypt_words(encrypted_bytes, key)
+        decrypted = str(decrypted).split("'")[1]
+    except Exception as e:
+        decrypted = f"Error decrypting message: {e}"
+    return render_template('result.html', encrypted=encrypted_str, decrypted=decrypted)
+
+
+if __name__ == '__main__':
+    app.run()

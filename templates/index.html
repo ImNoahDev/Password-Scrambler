@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Encrypt/Decrypt</title>
+</head>
+<body>
+    <h1>Encrypt a Message</h1>
+    <form action="/encrypt" method="post">
+        <button type="submit">Generate and Encrypt</button>
+    </form>
+
+    <h1>Decrypt a Message</h1>
+    <form action="/decrypt" method="post">
+        <label for="encrypted">Encrypted Message:</label>
+        <input type="text" id="encrypted" name="encrypted" required>
+        <button type="submit">Decrypt</button>
+    </form>
+</body>
+</html>
