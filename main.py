@@ -2,6 +2,7 @@
 from cryptography.fernet import Fernet
 from random_word import RandomWords
 import os
+import pyperclip
 
 r = RandomWords()
 
@@ -43,6 +44,9 @@ if input("Generate new words? (y/n): ") == "y":
     message = generate_words()
     print(f"Generated words: {message}")
     encrypted = encrypt_words(message, key)
-    print(f"Encrypted words: {str(encrypted).split("'")[1]}")
+    encrypted = str(encrypted).split("'")[1]
+    print(f"Encrypted words: {encrypted}")
+    pyperclip.copy(encrypted)
+    print("Copied to clipboard!")
 else:
      print(str(decrypt_words(input("words to decrypt: "), key)).split("'")[1])
