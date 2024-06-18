@@ -40,7 +40,7 @@ def decrypt_words(encrypted, key):
 key = generate_key()
 message = generate_words()
 
-if input("Generate new words? (y/n): ") == "y":
+if input("new or decrypt (n/d): ") == "n":
     message = generate_words()
     print(f"Generated words: {message}")
     encrypted = encrypt_words(message, key)
