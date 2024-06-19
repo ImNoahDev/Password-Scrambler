@@ -4,6 +4,7 @@ from random_word import RandomWords
 import os
 import pyperclip
 from flask import Flask, render_template, request
+from waitress import serve
 
 # Create an instance of RandomWords
 r = RandomWords()
@@ -47,21 +48,6 @@ def decrypt_words(encrypted, key):
     decrypted = f.decrypt(encrypted)
     return decrypted
 
-
-# key = generate_key()
-# message = generate_words()
-
-# if input("new or decrypt (n/d): ") == "n":
-#     message = generate_words()
-#     print(f"Generated words: {message}")
-#     encrypted = encrypt_words(message, key)
-#     encrypted = str(encrypted).split("'")[1]
-#     print(f"Encrypted words: {encrypted}")
-#     pyperclip.copy(encrypted)
-#     print("Copied to clipboard!")
-# else:
-#      print(str(decrypt_words(input("words to decrypt: "), key)).split("'")[1])
-
 # Initialise Flask
 app = Flask(__name__)
 # Home route
@@ -78,8 +64,10 @@ def encrypt():
     key = generate_key()
     encrypted = encrypt_words(message, key)
     encrypted_str = encrypted.decode()  # Convert bytes to string
+    # Copy encrypted message to clipboard
     pyperclip.copy(encrypted_str)
     clipboard_message = "Encrypted message copied to clipboard!"
+    # Render result page
     return render_template('result.html', message=message, encrypted=encrypted_str, clipboard_message=clipboard_message)
 
 # Decrypt route
@@ -91,11 +79,13 @@ def decrypt():
         encrypted_bytes = encrypted_str
         key = generate_key()
         decrypted = decrypt_words(encrypted_bytes, key)
+        # Convert bytes to string
         decrypted = str(decrypted).split("'")[1]
-    except Exception as e:
+    except Exception as e: # Handle exceptions
         decrypted = f"Error decrypting message: {e}"
+    # Render result page
     return render_template('result.html', encrypted=encrypted_str, decrypted=decrypted)
 
 # Run the app
 if __name__ == '__main__':
-    app.run()
+    serve(app, host='0.0.0.0', port=5000)
