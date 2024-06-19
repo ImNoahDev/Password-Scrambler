@@ -1,11 +1,10 @@
 from Crypto.Cipher import AES
-from Crypto.Util.Padding import pad, unpad
-from Crypto.Random import get_random_bytes
+from Crypto.Util.Padding import pad
 import base64
 from random_word import RandomWords
-import os
 import pyperclip
 from flask import Flask, render_template, request
+import secrets
 
 # Create an instance of RandomWords
 r = RandomWords()
@@ -32,23 +31,11 @@ def aesEcbEncryptToBase64(encryptionKey, plaintext):
     ciphertext = cipher.encrypt(pad(plaintext.encode("ascii"), AES.block_size))
     return base64Encoding(ciphertext)
 
-# Generate a key and save it to a file if it doesn't exist or read it from the file if it exists
 def generate_key():
-    # Check if key exists
-    if os.path.exists("key.key"):
-        # Read key from file
-        with open("key.key", "rb") as key_file:
-            key = key_file.read()
-            print("Key already exists! Using old key")
-            return key
-    else:
-        # Generate a new 256-bit (32 bytes) AES key if key doesn't exist
-        key = get_random_bytes(32)
-        with open("key.key", "wb") as key_file:
-            # Write key to file
-            key_file.write(key)
-            print("No key found, Generating a new key")
-            return key
+    # Generate a new 256-bit (32 bytes) AES key
+    key = secrets.token_bytes(32)
+    print("Generated a new key")
+    return key
 
 # Encrypt words
 def encrypt_words(message, key):
