@@ -75,18 +75,20 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-# Encrypt route
+
 @app.route('/encrypt', methods=['POST'])
 def encrypt():
     message = generate_words()
     key = generate_key()
     encrypted = encrypt_words(message, key)
-    encrypted_str = encrypted  # Already a string from aesEcbEncryptToBase64
+    encrypted_str = encrypted  # Replace with your actual encrypted message
+
     # Copy encrypted message to clipboard
     pyperclip.copy(encrypted_str)
     clipboard_message = "Encrypted message copied to clipboard!"
-    # Render result page
-    return render_template('result.html', message=message, encrypted=encrypted_str, clipboard_message=clipboard_message)
+
+    # Render result page with message, encrypted string, key, and clipboard message
+    return render_template('result.html', message=message, encrypted=encrypted_str, key=key, clipboard_message=clipboard_message)
 
 # Decrypt route
 @app.route('/decrypt', methods=['POST'])

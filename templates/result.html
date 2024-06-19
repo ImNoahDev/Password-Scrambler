@@ -25,6 +25,15 @@
                 </div>
                 {% endif %}
 
+                {% if key %}
+                <div class="mb-4">
+                    <h2 class="text-xl font-bold">Encryption Key:</h2>
+                    <div class="mt-2 text-gray-700 dark:text-gray-300 p-2 border border-gray-300 dark:border-gray-600 rounded-md max-h-48 overflow-auto">
+                        <p class="mt-1">{{ key }}</p>
+                    </div>
+                </div>
+                {% endif %}
+
                 {% if encrypted %}
                 <div class="mb-4">
                     <h2 class="text-xl font-bold">Encrypted Message:</h2>
