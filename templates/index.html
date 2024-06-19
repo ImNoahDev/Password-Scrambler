@@ -4,27 +4,33 @@
     <meta charset="UTF-8">
     <title>Encrypt/Decrypt</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Initialize Tailwind with dark mode support
+        tailwind.config = {
+            darkMode: 'media', // Use 'media' for automatic dark mode detection
+        }
+    </script>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
     <div class="container mx-auto p-4">
-        <div class="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="max-w-md mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden">
             <div class="p-4">
                 <h1 class="text-2xl font-bold mb-4">Encrypt a Message</h1>
                 <form action="/encrypt" method="post" class="space-y-4">
-                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Generate and Encrypt</button>
+                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 dark:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 focus:ring-opacity-75">Generate and Encrypt</button>
                 </form>
             </div>
         </div>
 
-        <div class="max-w-md mx-auto bg-white shadow-lg rounded-lg overflow-hidden mt-8">
+        <div class="max-w-md mx-auto bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden mt-8">
             <div class="p-4">
                 <h1 class="text-2xl font-bold mb-4">Decrypt a Message</h1>
                 <form action="/decrypt" method="post" class="space-y-4">
                     <div>
-                        <label for="encrypted" class="block text-sm font-medium text-gray-700">Encrypted Message:</label>
-                        <input type="text" id="encrypted" name="encrypted" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <label for="encrypted" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Encrypted Message:</label>
+                        <input type="text" id="encrypted" name="encrypted" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 dark:focus:ring-blue-600 focus:border-blue-500 dark:focus:border-blue-600 sm:text-sm">
                     </div>
-                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75">Decrypt</button>
+                    <button type="submit" class="w-full px-4 py-2 bg-blue-500 dark:bg-blue-700 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 dark:hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-blue-600 focus:ring-opacity-75">Decrypt</button>
                 </form>
             </div>
         </div>
