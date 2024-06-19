@@ -32,13 +32,6 @@ def aesEcbEncryptToBase64(encryptionKey, plaintext):
     ciphertext = cipher.encrypt(pad(plaintext.encode("ascii"), AES.block_size))
     return base64Encoding(ciphertext)
 
-def aesEcbDecryptFromBase64(decryptionKey, ciphertextDecryptionBase64):
-    ciphertext = base64Decoding(ciphertextDecryptionBase64)
-    cipher = AES.new(decryptionKey, AES.MODE_ECB)
-    decryptedtext = unpad(cipher.decrypt(ciphertext), AES.block_size)
-    decryptedtextP = decryptedtext.decode("UTF-8")
-    return decryptedtextP
-
 # Generate a key and save it to a file if it doesn't exist or read it from the file if it exists
 def generate_key():
     # Check if key exists
@@ -62,11 +55,6 @@ def encrypt_words(message, key):
     encrypted = aesEcbEncryptToBase64(key, message)
     return encrypted
 
-# Decrypt words
-def decrypt_words(encrypted, key):
-    decrypted = aesEcbDecryptFromBase64(key, encrypted)
-    return decrypted
-
 # Initialise Flask
 app = Flask(__name__)
 
@@ -82,7 +70,7 @@ def encrypt():
     key = generate_key()
     encrypted = encrypt_words(message, key)
     encrypted_str = encrypted  # Replace with your actual encrypted message
-
+    key = base64Encoding(key)
     # Copy encrypted message to clipboard
     pyperclip.copy(encrypted_str)
     clipboard_message = "Encrypted message copied to clipboard!"
@@ -94,14 +82,16 @@ def encrypt():
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
     encrypted_str = request.form['encrypted']
+    decryption_key = request.form['decryption_key']  # Get decryption key from form
+    decryption_key = base64Decoding(decryption_key)
+
     try:
-        encrypted_bytes = encrypted_str
-        key = generate_key()
-        decrypted = encrypt_words(encrypted_bytes, key)
-    except Exception as e: # Handle exceptions
+        decrypted = encrypt_words(encrypted_str, decryption_key)
+    except Exception as e:
         decrypted = f"Error decrypting message: {e}"
-    # Render result page
+
     return render_template('result.html', encrypted=encrypted_str, decrypted=decrypted)
+
 
 # Run the app
 if __name__ == '__main__':
