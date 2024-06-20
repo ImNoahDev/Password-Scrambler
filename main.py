@@ -19,28 +19,30 @@ def generate_words():
     return words
 
 def base64Encoding(input):
-    dataBase64 = base64.b64encode(input)
-    dataBase64P = dataBase64.decode("UTF-8")
-    return dataBase64P
+    return base64.b64encode(input).decode("UTF-8")
 
 def base64Decoding(input):
-    return base64.decodebytes(input.encode("ascii"))
+    return base64.b64decode(input.encode("UTF-8"))
 
 def aesEcbEncryptToBase64(encryptionKey, plaintext):
+    if len(encryptionKey) not in (16, 24, 32):
+        raise ValueError("Encryption key must be 16, 24, or 32 bytes long")
     cipher = AES.new(encryptionKey, AES.MODE_ECB)
-    ciphertext = cipher.encrypt(pad(plaintext.encode("ascii"), AES.block_size))
-    return base64Encoding(ciphertext)
+    padded_text = pad(plaintext.encode("ascii"), AES.block_size)
+    ciphertext = cipher.encrypt(padded_text)
+    return base64.b64encode(ciphertext).decode('ascii')
 
 def generate_key():
     # Generate a new 256-bit (32 bytes) AES key
     key = secrets.token_bytes(32)
+    # key = str()
+    # key = base64Decoding(key)
     print("Generated a new key")
     return key
 
 # Encrypt words
 def encrypt_words(message, key):
-    encrypted = aesEcbEncryptToBase64(key, message)
-    return encrypted
+    return aesEcbEncryptToBase64(key, message)
 
 # Initialise Flask
 app = Flask(__name__)
@@ -55,22 +57,24 @@ def home():
 def encrypt():
     message = generate_words()
     key = generate_key()
+    # print(key) Logging to check if key is working
     encrypted = encrypt_words(message, key)
-    encrypted_str = encrypted  # Replace with your actual encrypted message
+    encrypted_str = encrypted  
     key = base64Encoding(key)
     # Copy encrypted message to clipboard
     pyperclip.copy(encrypted_str)
     clipboard_message = "Encrypted message copied to clipboard!"
 
     # Render result page with message, encrypted string, key, and clipboard message
-    return render_template('result.html', message=message, encrypted=encrypted_str, key=key, clipboard_message=clipboard_message)
+    return render_template('result.html', message=message, encrypted=encrypted, key=key, clipboard_message=clipboard_message)
 
 # Decrypt route
 @app.route('/decrypt', methods=['POST'])
 def decrypt():
-    encrypted_str = request.form['encrypted']
+    encrypted_str = str(request.form['encrypted'])
     decryption_key = request.form['decryption_key']  # Get decryption key from form
     decryption_key = base64Decoding(decryption_key)
+    # print(decryption_key) Logging to check if key is working
 
     try:
         decrypted = encrypt_words(encrypted_str, decryption_key)
